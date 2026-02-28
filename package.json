@@ -1,6 +1,9 @@
 {
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
-    "start": "npx tsx index.ts"
+    "start": "npx tsx --env-file=.env index.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.78.0",

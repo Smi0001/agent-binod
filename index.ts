@@ -1,9 +1,7 @@
 import Anthropic from "@anthropic-ai/sdk";
-import { loadEnv } from "./custom-utils";
-loadEnv();
-
 import { toolDefinitions, executeTool } from "./tools";
 
+console.log(`Loaded env >>>> ${process.env.GITEA_TOKEN}`);
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
