@@ -1,13 +1,26 @@
 # <u>PR Review Agent</u>
 **Token-authenticated, multi-platform AI agent for automated pull request reviews, currently integrated for *Gitea and GitHub.***
 
+<br/>
+
+##  Install Dependencies
+1. `node v22^`
+2. `anthropic-ai/sdk v0.7^`
+3. `typescript v5^`
+
+
+```
+npm i
+
+```
+
+****
+<br/>
+
 ## Usage
+Defaults to the platform whose token is configured in `.env`. If only one of `GITEA_TOKEN` or `GITHUB_TOKEN` is set, that platform is auto-selected. Override anytime with `--platform=gitea` or `--platform=github`.
 
-#### Install
-```
-npm install @anthropic-ai/sdk
 
-```
 #### List open PRs
 
 ```
@@ -34,6 +47,16 @@ npm start "List open PRs and review each one, post comments"
 ## <u>How to find the values for the env variables ?</u>
 <br/>
 
+*ANTHROPIC_API_KEY*
+1. Go to console.anthropic.com
+2. Sign in (or create an account)
+3. Click API Keys in the left sidebar
+4. Click Create Key, give it a name (e.g. pr-review-agent)
+5. Copy the key immediately — it's only shown once
+
+`ANTHROPIC_API_KEY=sk-ant-api03-xxxxxxxxxxxxxxxxxxxx`
+<br/>
+
 **Platform=Gitea**
 *GITEA_REPO* — easy, it's just `owner/repo`  from your Gitea URL:
 https://github.com/Smi0001/pr-review-agent  →  `GITEA_REPO=Smi0001/pr-review-agent`
@@ -58,14 +81,6 @@ GITEA_TOKEN — create an access token in Gitea:
 https://git.example.com  →  `GITEA_BASE=https://git.example.com/api/v1`
 
 <br/>
-So your .env for Gitea looks like:
-
-```
-GITEA_TOKEN=7cd244f5...
-GITEA_BASE=https://git.coverstack.in/api/v1
-GITEA_REPO=Smi0001/pr-review-agent
-```
-
 <br/>
 
 **Platform=Github**
@@ -92,19 +107,11 @@ https://github.com/Smi0001/pr-review-agent  →  `GITHUB_REPO=Smi0001/pr-review-
 BASE_BRANCH=origin/main
 
 If you leave it blank, the agent still works but local git diffs will fall back to the Gitea default branch, which likely won't exist for a GitHub repo — so local git will fail and it'll fall back to the GitHub API for diffs automatically.
-<br/>
-So your .env for Github looks like:
-
-```
-GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxx
-GITHUB_REPO=Smi0001/pr-review-agent
-BASE_BRANCH=origin/main
-```
 
 
 ****
 <br/>
 
 ## <u>Coming Soon</u>
-1. PR Review for Git
+1. ~~PR Review for Github~~
 2. Interactive CLI commands

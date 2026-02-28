@@ -5,13 +5,13 @@ export function fetchPRLocally(pr_number: number): string {
   return `pr-${pr_number}`;
 }
 
-export function getPRDiffLocally(pr_number: number, base = "upstream/gp-3.0"): string {
+export function getPRDiffLocally(pr_number: number, base = process.env.BASE_BRANCH ?? "upstream/gp-3.0"): string {
   const branch = fetchPRLocally(pr_number);
   const diff = execSync(`git diff ${base}...${branch}`).toString();
   return diff.slice(0, 20000); // trim for token limits
 }
 
-export function getPRCommitsLocally(pr_number: number, base = "upstream/gp-3.0"): string {
+export function getPRCommitsLocally(pr_number: number, base = process.env.BASE_BRANCH ?? "upstream/gp-3.0"): string {
   const branch = fetchPRLocally(pr_number);
   return execSync(`git log ${base}..${branch} --oneline`).toString();
 }

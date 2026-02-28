@@ -1,5 +1,8 @@
-import * as Gitea from "./gitea";
-import * as Git   from "./git";
+import * as Gitea  from "./gitea";
+import * as GitHub from "./github";
+import * as Git    from "./git";
+
+export type Platform = "gitea" | "github";
 
 export const toolDefinitions = [
   {
@@ -55,11 +58,13 @@ export const toolDefinitions = [
 ];
 
 // Tool executor — maps tool name → actual function
-export async function executeTool(name: string, input: any): Promise<string> {
+export async function executeTool(name: string, input: any, platform: Platform = "gitea"): Promise<string> {
+  const api = platform === "github" ? GitHub : Gitea;
+
   switch (name) {
 
     case "list_open_prs": {
-      const prs = await Gitea.listOpenPRs();
+      const prs = await api.listOpenPRs();
       return JSON.stringify(prs, null, 2);
     }
 
@@ -68,8 +73,8 @@ export async function executeTool(name: string, input: any): Promise<string> {
         // Try local git first (no token needed, faster)
         return Git.getPRDiffLocally(input.pr_number);
       } catch {
-        // Fall back to Gitea API
-        return Gitea.getPRDiff(input.pr_number);
+        // Fall back to API
+        return api.getPRDiff(input.pr_number);
       }
     }
 
@@ -77,18 +82,18 @@ export async function executeTool(name: string, input: any): Promise<string> {
       try {
         return Git.getPRCommitsLocally(input.pr_number);
       } catch {
-        const pr = await Gitea.getPRDetails(input.pr_number);
+        const pr = await api.getPRDetails(input.pr_number);
         return `Branch: ${pr.head?.label} → ${pr.base?.label}`;
       }
     }
 
     case "post_pr_comment": {
-      const result = await Gitea.postComment(input.pr_number, input.comment);
+      const result = await api.postComment(input.pr_number, input.comment);
       return result.id ? `Comment posted: #${result.id}` : "Failed to post";
     }
 
     case "get_pr_comments": {
-      const comments = await Gitea.getPRComments(input.pr_number);
+      const comments = await api.getPRComments(input.pr_number);
       return JSON.stringify(comments.map((c: any) => ({
         author: c.user.login,
         body:   c.body.slice(0, 300),
