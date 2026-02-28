@@ -27,3 +27,9 @@ npm start "Review PR #1001 and tell me the concerns without posting"
 ```
 npm start "List open PRs and review each one, post comments"
 ```
+
+
+
+## <u>Coming Soon</u>
+1. PR Review for Git
+2. Interactive CLI commands
