@@ -1,3 +1,5 @@
+import { PR } from "./types";
+
 const REPO  = () => process.env.GITHUB_REPO!;
 const TOKEN = () => process.env.GITHUB_TOKEN!;
 const BASE  = "https://api.github.com";
@@ -10,10 +12,10 @@ const headers = () => ({
   "X-GitHub-Api-Version": "2022-11-28",
 });
 
-export async function listOpenPRs() {
+export async function listOpenPRs(): Promise<PR[]> {
   const res = await fetch(`${BASE}/repos/${REPO()}/pulls?state=open&per_page=20`, { headers: headers() });
   const prs = await res.json();
-  return prs.map((pr: any) => ({
+  return prs.map((pr: any): PR => ({
     number:  pr.number,
     title:   pr.title,
     author:  pr.user.login,

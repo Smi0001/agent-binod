@@ -17,9 +17,25 @@ function detectPlatform(): Platform {
 const current_platform: Platform = detectPlatform();
 const userPrompt = args.filter(a => !a.startsWith("--platform=")).join(" ") || "List all open PRs";
 
+function validateEnv(platform: Platform): void {
+  const required: Record<Platform, string[]> = {
+    gitea:  ["ANTHROPIC_API_KEY", "GITEA_TOKEN", "GITEA_BASE", "GITEA_REPO"],
+    github: ["ANTHROPIC_API_KEY", "GITHUB_TOKEN", "GITHUB_REPO"],
+  };
+  const missing = required[platform].filter(key => !process.env[key]);
+  if (missing.length) {
+    console.error(`Missing required env variables for platform "${platform}": ${missing.join(", ")}`);
+    process.exit(1);
+  }
+}
+
 console.log(`Agent Binod is on Platform: ${current_platform}`);
+
+validateEnv(current_platform);
+
 const current_env_token = (current_platform === "github" ? process.env.GITHUB_TOKEN : process.env.GITEA_TOKEN);
 const masked_token = current_env_token ? `${current_env_token.slice(0, 6)}*****${current_env_token.slice(-4)}` : "not set";
+
 console.log(`Loading platform ticket for Agent Binod... ${masked_token}`);
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });

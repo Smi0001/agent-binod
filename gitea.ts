@@ -1,3 +1,5 @@
+import { PR } from "./types";
+
 const BASE  = () => process.env.GITEA_BASE!;
 const REPO  = () => process.env.GITEA_REPO!;
 const TOKEN = () => process.env.GITEA_TOKEN!;
@@ -8,17 +10,17 @@ const headers = () => ({
   "Content-Type": "application/json",
 });
 
-export async function listOpenPRs() {
+export async function listOpenPRs(): Promise<PR[]> {
   const res = await fetch(`${BASE()}/repos/${REPO()}/pulls?state=open&limit=20`, { headers: headers() });
   const prs = await res.json();
-  return prs.map((pr: any) => ({
-    number:    pr.number,
-    title:     pr.title,
-    author:    pr.user.login,
-    branch:    pr.head?.label,
-    base:      pr.base?.label,
-    created:   pr.created_at?.slice(0, 10),
-    body:      pr.body,
+  return prs.map((pr: any): PR => ({
+    number:  pr.number,
+    title:   pr.title,
+    author:  pr.user.login,
+    branch:  pr.head?.label,
+    base:    pr.base?.label,
+    created: pr.created_at?.slice(0, 10),
+    body:    pr.body,
   }));
 }
 

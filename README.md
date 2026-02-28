@@ -66,7 +66,7 @@ npm start "List open PRs and review each one, post comments"
 
 **Platform=Gitea**
 *GITEA_REPO* — easy, it's just `owner/repo`  from your Gitea URL:
-https://github.com/Smi0001/pr-review-agent  →  `GITEA_REPO=Smi0001/pr-review-agent`
+https://git.example.com/Smi0001/pr-review-agent   →  `GITEA_REPO=Smi0001/pr-review-agent`
 <br/>
 
 GITEA_TOKEN — create an access token in Gitea:
@@ -121,4 +121,5 @@ If you leave it blank, the agent still works but local git diffs will fall back 
 
 ## <u>Coming Soon</u>
 1. ~~PR Review for Github~~
-2. Interactive CLI commands
+2. ~~Validation for missing configuration (env variables)~~
+3. Interactive CLI commands
