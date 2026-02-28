@@ -89,7 +89,9 @@ export async function executeTool(name: string, input: any, platform: Platform =
 
     case "post_pr_comment": {
       const result = await api.postComment(input.pr_number, input.comment);
-      return result.id ? `Comment posted: #${result.id}` : "Failed to post";
+      if (result.id) return `Comment posted: #${result.id}`;
+      const reason = result.message ?? JSON.stringify(result);
+      throw new Error(`Failed to post comment: ${reason}`);
     }
 
     case "get_pr_comments": {
