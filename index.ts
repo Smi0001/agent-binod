@@ -1,13 +1,48 @@
 import Anthropic from "@anthropic-ai/sdk";
-import { toolDefinitions, executeTool } from "./tools";
+import { toolDefinitions, executeTool, Platform } from "./tools";
 
-console.log(`Loaded env >>>> ${process.env.GITEA_TOKEN}`);
+// Parse CLI args: strip --platform=... flag, rest is the user prompt.
+// Auto-detects platform (Gitea/GitHub) based on env config if --platform is not specified.
+const args = process.argv.slice(2);
+
+function detectPlatform(): Platform {
+  const platformArg = args.find(a => a.startsWith("--platform="));
+  if (platformArg) return platformArg.split("=")[1] === "github" ? "github" : "gitea";
+  const hasGitea  = !!process.env.GITEA_TOKEN;
+  const hasGithub = !!process.env.GITHUB_TOKEN;
+  if (hasGithub && !hasGitea) return "github";
+  return "gitea"; // default when both or neither are set
+}
+
+const current_platform: Platform = detectPlatform();
+const userPrompt = args.filter(a => !a.startsWith("--platform=")).join(" ") || "List all open PRs";
+
+function validateEnv(platform: Platform): void {
+  const required: Record<Platform, string[]> = {
+    gitea:  ["ANTHROPIC_API_KEY", "GITEA_TOKEN", "GITEA_BASE", "GITEA_REPO"],
+    github: ["ANTHROPIC_API_KEY", "GITHUB_TOKEN", "GITHUB_REPO"],
+  };
+  const missing = required[platform].filter(key => !process.env[key]);
+  if (missing.length) {
+    console.error(`Missing required env variables for platform "${platform}": ${missing.join(", ")}`);
+    process.exit(1);
+  }
+}
+
+console.log(`Agent Binod is on Platform: ${current_platform}`);
+
+validateEnv(current_platform);
+
+const current_env_token = (current_platform === "github" ? process.env.GITHUB_TOKEN : process.env.GITEA_TOKEN);
+const masked_token = current_env_token ? `${current_env_token.slice(0, 6)}*****${current_env_token.slice(-4)}` : "not set";
+
+console.log(`Loading platform ticket for Agent Binod... ${masked_token}`);
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
-console.log("Starting code review agent...");
+console.log("Activating Agent Binod to review your code...");
 
-const SYSTEM_PROMPT = `You are a senior code reviewer for a React/TypeScript + Node.js group insurance product.
+const SYSTEM_PROMPT = `You are a senior code reviewer for the given project.
 
 When reviewing a PR, always:
 1. First fetch commits to understand the intent
@@ -58,7 +93,7 @@ async function runAgent(userMessage: string) {
         .map(async (block: any) => {
           if (block.type !== "tool_use") return null;
           console.log(`  → calling ${block.name}(${JSON.stringify(block.input)})`);
-          const result = await executeTool(block.name, block.input);
+          const result = await executeTool(block.name, block.input, current_platform);
           console.log(`  ← ${result.slice(0, 100)}...`);
           return {
             type:        "tool_result" as const,
@@ -76,6 +111,4 @@ async function runAgent(userMessage: string) {
   }
 }
 
-// CLI usage
-const userPrompt = process.argv[2] ?? "List all open PRs";
 runAgent(userPrompt).catch(console.error);
