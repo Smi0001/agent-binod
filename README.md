@@ -25,7 +25,7 @@ npm i
 <br/>
 
 ## Usage
-Defaults to the platform whose token is configured in `.env`. If only one of `GITEA_TOKEN` or `GITHUB_TOKEN` is set, that platform is auto-selected. Override anytime with `--platform=gitea` or `--platform=github`.
+Defaults to the platform whose token is configured in `.env`. If only one of `GITEA_TOKEN` or `GITHUB_TOKEN` is set, that platform is auto-selected. Override anytime with `-- --platform=gitea` or `-- --platform=github`.
 
 
 #### List open PRs
