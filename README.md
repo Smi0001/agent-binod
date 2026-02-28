@@ -3,11 +3,22 @@
 
 <br/>
 
-### Platform 
+## Table of Contents
+- [Platform](#platform)
+- [Install Dependencies](#install-dependencies)
+- [Usage](#usage)
+- [Environment Variables](#how-to-find-the-values-for-the-env-variables-)
+- [Coming Soon](#coming-soon)
+
+---
+<br/>
+
+### Platform
 Currently integrated for:
 1. **Gitea** *(default)*
 2. **GitHub**
 
+---
 <br/>
 
 ##  Install Dependencies
@@ -21,7 +32,7 @@ npm i
 
 ```
 
-****
+---
 <br/>
 
 ## Usage
@@ -49,7 +60,7 @@ npm start "List open PRs and review each one, post comments"
 ```
 <br/>
 
-****
+---
 
 ## <u>How to find the values for the env variables ?</u>
 <br/>
@@ -116,10 +127,11 @@ BASE_BRANCH=origin/main
 If you leave it blank, the agent still works but local git diffs will fall back to the Gitea default branch, which likely won't exist for a GitHub repo — so local git will fail and it'll fall back to the GitHub API for diffs automatically.
 
 
-****
+---
 <br/>
 
 ## <u>Coming Soon</u>
 1. ~~PR Review for Github~~
 2. ~~Validation for missing configuration (env variables)~~
-3. Interactive CLI commands
+3. PR Review for Gitlab
+4. Interactive CLI commands
