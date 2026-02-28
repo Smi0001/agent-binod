@@ -4,9 +4,9 @@ import { toolDefinitions, executeTool, Platform } from "./tools";
 // Parse CLI args: strip --platform=... flag, rest is the user prompt.
 // Auto-detects platform (Gitea/GitHub) based on env config if --platform is not specified.
 const args = process.argv.slice(2);
-const platformArg = args.find(a => a.startsWith("--platform="));
 
 function detectPlatform(): Platform {
+  const platformArg = args.find(a => a.startsWith("--platform="));
   if (platformArg) return platformArg.split("=")[1] === "github" ? "github" : "gitea";
   const hasGitea  = !!process.env.GITEA_TOKEN;
   const hasGithub = !!process.env.GITHUB_TOKEN;
