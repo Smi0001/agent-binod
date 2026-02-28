@@ -1,4 +1,4 @@
-# <u>PR Review Agent</u>
+# <u>Agent Binod - a pull request review agent</u>
 **Token-authenticated, multi-platform AI agent for automated pull request reviews, currently integrated for *Gitea and GitHub.***
 
 <br/>
