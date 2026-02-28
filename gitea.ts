@@ -11,7 +11,8 @@ const headers = () => ({
 });
 
 export async function listOpenPRs(): Promise<PR[]> {
-  const res = await fetch(`${BASE()}/repos/${REPO()}/pulls?state=open&limit=20`, { headers: headers() });
+  const limit = process.env.PR_FETCH_LIMIT ?? "50";
+  const res = await fetch(`${BASE()}/repos/${REPO()}/pulls?state=open&limit=${limit}`, { headers: headers() });
   const prs = await res.json();
   return prs.map((pr: any): PR => ({
     number:  pr.number,

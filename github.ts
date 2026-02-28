@@ -20,7 +20,8 @@ async function assertOk(res: Response): Promise<void> {
 }
 
 export async function listOpenPRs(): Promise<PR[]> {
-  const res = await fetch(`${BASE}/repos/${REPO()}/pulls?state=open&per_page=20`, { headers: headers() });
+  const limit = process.env.PR_FETCH_LIMIT ?? "50";
+  const res = await fetch(`${BASE}/repos/${REPO()}/pulls?state=open&per_page=${limit}`, { headers: headers() });
   await assertOk(res);
   const prs = await res.json();
   return prs.map((pr: any): PR => ({
