@@ -5,9 +5,11 @@
 
 ## Table of Contents
 - [Platform](#platform)
+- [Tools](#current-tools)
 - [Install Dependencies](#install-dependencies)
 - [Usage](#usage)
 - [Environment Variables](#how-to-find-the-values-for-the-env-variables-)
+- [Links](#links)
 - [Coming Soon](#coming-soon)
 
 ---
@@ -17,6 +19,30 @@
 Currently integrated for:
 1. **Gitea** *(default)*
 2. **GitHub**
+
+---
+<br/>
+
+## Current tools
+
+Claude can only do these 5 things:
+
+| Tool | What it does |
+|---|---|
+| `list_open_prs` | Lists all open PRs |
+| `get_pr_diff` | Gets the code changes of a PR |
+| `get_pr_commits` | Gets the commit history of a PR |
+| `get_pr_comments` | Reads existing comments on a PR |
+| `post_pr_comment` | Posts a comment on a PR |
+
+
+**Prompts that won't work:**
+- `"Close PR #5"` — no close tool
+- `"Approve PR #5"` — no approve tool
+- `"Assign PR #5 to someone"` — no assign tool
+
+The prompt controls **what Claude thinks and says** — the tools control **what it can actually do**.
+
 
 ---
 <br/>
@@ -126,6 +152,12 @@ BASE_BRANCH=origin/main
 
 If you leave it blank, the agent still works but local git diffs will fall back to the Gitea default branch, which likely won't exist for a GitHub repo — so local git will fail and it'll fall back to the GitHub API for diffs automatically.
 
+---
+<br/>
+
+**Links**
+- GitHub: https://github.com/Smi0001/agent-binod
+- npm: https://www.npmjs.com/package/agent-binod
 
 ---
 <br/>
