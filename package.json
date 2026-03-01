@@ -14,9 +14,9 @@
     "tsx": "^4.21.0"
   },
   "name": "agent-binod",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "A simple agent that reviews your git code, comments on your PR (pull requests), automated using the Anthropic API.",
   "main": "index.ts",
   "author": "Smi0001",
-  "license": ""
+  "license": "MIT"
 }
