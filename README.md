@@ -129,7 +129,7 @@ npm start "List open PRs and review each one, post comments"
 1. Go to console.anthropic.com
 2. Sign in (or create an account)
 3. Click API Keys in the left sidebar
-4. Click Create Key, give it a name (e.g. pr-review-agent)
+4. Click Create Key, give it a name (e.g. agent-binod-key)
 5. Copy the key immediately — it's only shown once
 
 `ANTHROPIC_API_KEY=sk-ant-api03-xxxxxxxxxxxxxxxxxxxx`
@@ -137,14 +137,14 @@ npm start "List open PRs and review each one, post comments"
 
 **Platform=Gitea**
 *GITEA_REPO* — easy, it's just `owner/repo`  from your Gitea URL:
-https://git.example.com/Smi0001/pr-review-agent   →  `GITEA_REPO=Smi0001/pr-review-agent`
+https://git.example.com/Smi0001/agent-binod   →  `GITEA_REPO=Smi0001/agent-binod`
 <br/>
 
 GITEA_TOKEN — create an access token in Gitea:
 
 1. Go to your Gitea instance → click your avatar (top-right) → Settings
 2. Left sidebar → Applications
-3. Under Manage Access Tokens, enter a token name (e.g. pr-review-agent)
+3. Under Manage Access Tokens, enter a token name (e.g. agent-binod)
 4. Select permissions:
   - Issues → Read & Write (for posting PR comments)
   - Pull Requests → Read (for listing/reading PRs)
@@ -164,7 +164,7 @@ https://git.example.com  →  `GITEA_BASE=https://git.example.com/api/v1`
 **Platform=Github**
 *GITHUB_REPO* — easy, it's just `owner/repo`  from your GitHub URL:
 
-https://github.com/Smi0001/pr-review-agent  →  `GITHUB_REPO=Smi0001/pr-review-agent`
+https://github.com/Smi0001/agent-binod  →  `GITHUB_REPO=Smi0001/agent-binod`
 <br/>
 
 *GITHUB_TOKEN* — create a Personal Access Token (PAT):
@@ -172,7 +172,7 @@ https://github.com/Smi0001/pr-review-agent  →  `GITHUB_REPO=Smi0001/pr-review-
 2. Scroll down to Developer settings (bottom of left sidebar)
 3. Personal access tokens → Tokens (classic)
 4. Click Generate new token (classic)
-5. Give it a name (e.g. pr-review-agent)
+5. Give it a name (e.g. agent-binod)
 6. Select scopes:
   - repo — to read PRs and post comments on private repos
   - public_repo — if the repo is public (lighter permission)
