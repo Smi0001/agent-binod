@@ -1,9 +1,10 @@
-# <u>Agent Binod - a pull request review agent</u>
+# <u>Agent Binod - a pull request review agent</u> 🤖
+
 **Token-authenticated, multi-platform AI agent for automated pull request reviews.**
 
 <br/>
 
-## Table of Contents
+## Table of Contents 📋
 - [Platform](#platform)
 - [Tools](#current-tools)
 - [Install Dependencies](#install-dependencies)
@@ -15,7 +16,7 @@
 ---
 <br/>
 
-### Platform
+### Platform 🌐
 Currently integrated for:
 1. **Gitea** *(default)*
 2. **GitHub**
@@ -23,7 +24,7 @@ Currently integrated for:
 ---
 <br/>
 
-## Current tools
+## Current tools 🛠️
 
 Claude can only do these 5 things:
 
@@ -43,14 +44,15 @@ Claude can only do these 5 things:
 
 The prompt controls **what Claude thinks and says** — the tools control **what it can actually do**.
 
+> **Tip** - *Add new tools to get things done by Agent Binod*
 
 ---
 <br/>
 
-##  Install Dependencies
-1. `node v22^`
-2. `anthropic-ai/sdk v0.7^`
-3. `typescript v5^`
+##  Install Dependencies 📦
+1. `node` - v22^
+2. `anthropic-ai/sdk` - v0.7^
+3. `typescript` - v5^
 
 
 ```
@@ -61,26 +63,58 @@ npm i
 ---
 <br/>
 
-## Usage
-Defaults to the platform whose token is configured in `.env`. If only one of `GITEA_TOKEN` or `GITHUB_TOKEN` is set, that platform is auto-selected. Override anytime with `-- --platform=gitea` or `-- --platform=github`.
+## Usage 🚀
+Agent Binod will act as a senior programmer who can review codes and post comments (for now). Add new tools and watch him put the CLI on fire 🔥.
+- If only one platform is configured, i.e. `GITEA_TOKEN` or `GITHUB_TOKEN`, etc. single token is set in `.env`, Agent Binod is smart enought to pick that as the default platform.
+- If you have configured multiple platforms, then you need to inform him. Override anytime with `-- --platform=gitea` or `-- --platform=github`. 
 
+<br/>
 
-#### List open PRs
+#### List open PRs 📂
 
 ```
 npm start "List all open PRs"
 
 ```
-#### Review a specific PR
+<br/>
+
+#### Review a specific PR 🔍
+
 ```
-npm start "Review PR #1001 and post the review as a comment"
+npm start "Review PR #1001 and post the review as comments"
 ```
-#### Just analyze, don't post
+> **Gitea** - *default platform, if multiple platforms are configured*
+
+[Agent Binod - platform Gitea - PR review and post comments](https://youtu.be/Y9rwzNHxT74)
+
+[![Watch the demo](https://img.youtube.com/vi/Y9rwzNHxT74/maxresdefault.jpg)](https://www.youtube.com/watch?v=Y9rwzNHxT74)
+
+
+<br/>
+
+> **Github** - *mention platform as github*
+`npm start -- --platform=github "Review PR #1001 and post the review as comments"`
+
+[Agent Binod - platform Github - PR review and post for new commits only (small tweak in the prompt)](https://youtu.be/UgTNF-nUuzA)
+
+[![Watch the demo](https://img.youtube.com/vi/UgTNF-nUuzA/maxresdefault.jpg)](https://www.youtube.com/watch?v=UgTNF-nUuzA)
+
+<br/>
+
+#### Just analyze, don't post 🧪
 ```
 npm start "Review PR #1001 and tell me the concerns without posting"
 ```
+> **Github** - *mention platform as github*
+`npm start -- --platform=github "Review PR #1001 and do not post"`
 
-#### Review all open PRs
+[Agent Binod - platform Github - PR review without posting, and post comments on new prompt](https://youtu.be/Aec2Ji97Ozk)
+
+[![Watch the demo](https://img.youtube.com/vi/Aec2Ji97Ozk/maxresdefault.jpg)](https://www.youtube.com/watch?v=Aec2Ji97Ozk)
+
+<br/>
+
+#### Review all open PRs 🔄
 ```
 npm start "List open PRs and review each one, post comments"
 ```
@@ -88,7 +122,7 @@ npm start "List open PRs and review each one, post comments"
 
 ---
 
-## <u>How to find the values for the env variables ?</u>
+## <u>How to find the values for the env variables ?</u> 🔑
 <br/>
 
 *ANTHROPIC_API_KEY*
@@ -155,15 +189,20 @@ If you leave it blank, the agent still works but local git diffs will fall back 
 ---
 <br/>
 
-**Links**
+**Links** 🔗
 - GitHub: https://github.com/Smi0001/agent-binod
 - npm: https://www.npmjs.com/package/agent-binod
 
 ---
 <br/>
 
-## <u>Coming Soon</u>
+## <u>Coming Soon</u> ⏳
 1. ~~PR Review for Github~~
 2. ~~Validation for missing configuration (env variables)~~
 3. PR Review for Gitlab
-4. Interactive CLI commands
+4. Add new tools
+    - Tag users in comments
+    - Close PR
+    - Approve PR
+    - Assign PRs to users
+6. Interactive CLI commands
