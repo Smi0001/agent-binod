@@ -1,0 +1,37 @@
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Git
+.git/
+.gitignore
+
+# Claude AI
+.claude/
+
+# Dev/internal docs
+overview.md
+
+# TypeScript config (not needed by consumers)
+tsconfig.json
