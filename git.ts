@@ -31,10 +31,18 @@ function filterNoisyFiles(diff: string): string {
 }
 
 export function getPRDiffLocally(pr_number: number, base = process.env.BASE_BRANCH ?? "upstream/gp-3.0"): string {
+  const limit   = parseInt(process.env.DIFF_MAX_CHARS ?? "20000", 10);
   const branch  = fetchPRLocally(pr_number);
   const diff    = execSync(`git diff ${base}...${branch}`).toString();
   const cleaned = filterNoisyFiles(diff);
-  return cleaned.slice(0, 20000); // trim for token limits
+
+  if (cleaned.length > limit) {
+    return cleaned.slice(0, limit) +
+      `\n\n[DIFF TRUNCATED — current limit is ${limit} characters. ` +
+      `This is a partial review only. ` +
+      `To review the full PR, increase DIFF_MAX_CHARS in your .env (e.g. DIFF_MAX_CHARS=50000).]`;
+  }
+  return cleaned;
 }
 
 export function getPRCommitsLocally(pr_number: number, base = process.env.BASE_BRANCH ?? "upstream/gp-3.0"): string {
