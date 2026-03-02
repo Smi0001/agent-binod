@@ -137,7 +137,7 @@ Create a `.env` file with your Anthropic API key, and other repo path & token co
 
 **Platform=Gitea**
 *GITEA_REPO* — easy, it's just `owner/repo`  from your Gitea URL:
-https://git.example.com/Smi0001/agent-binod   →  `GITEA_REPO=Smi0001/agent-binod`
+https://git.example.com/owner/repo   →  `GITEA_REPO=owner/repo`
 <br/>
 
 GITEA_TOKEN — create an access token in Gitea:
@@ -164,7 +164,7 @@ https://git.example.com  →  `GITEA_BASE=https://git.example.com/api/v1`
 **Platform=Github**
 *GITHUB_REPO* — easy, it's just `owner/repo`  from your GitHub URL:
 
-https://github.com/Smi0001/agent-binod  →  `GITHUB_REPO=Smi0001/agent-binod`
+https://github.com/owner/repo   →  `GITEA_REPO=owner/repo`
 <br/>
 
 *GITHUB_TOKEN* — create a Personal Access Token (PAT):
