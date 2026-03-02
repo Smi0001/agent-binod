@@ -9,7 +9,7 @@
 - [Tools](#current-tools)
 - [Getting Started](#getting-started)
 - [Usage](#usage)
-- [Environment Variables](#how-to-find-the-values-for-the-env-variables-)
+- [Environment Variables](#how-to-fi****nd-the-values-for-the-env-variables-)
 - [Links](#links)
 - [Coming Soon](#coming-soon)
 
@@ -57,13 +57,15 @@ Agent Binod can be used in two ways — as a **global CLI tool** (recommended) o
 
 ### Option 1: Global CLI ⚡ *(recommended)*
 
-Install globally via npm:
+1. **Setup** 🔧 
+   Install globally via npm:
 
 ```
 npm install -g agent-binod
 ```
 
-Create a `.env` file in your project directory. Refer `.env.example` for the variables to configure with your tokens (at least one platform need to be configured):
+2. **Configuration** ⚙️
+   Create a `.env` file in your project directory. Refer `.env.example` for the variables to configure with your tokens (at least one platform need to be configured):
 
 ```
 ANTHROPIC_API_KEY=sk-ant-api03-xxxxxxxxxxxxxxxxxxxx
@@ -87,18 +89,20 @@ BASE_BRANCH=
 PR_FETCH_LIMIT=
 
 ```
-
-Then run from anywhere inside your project:
+ 
+3. **Execution** ▶️
+    Then run from anywhere inside your project:
 
 ```
 agent-binod "Review PR #1 and post comment"
 ```
+> **Tip**: You can give various variations in your prompt, examples are given below under `Usage` title
 
 ---
 
 ### Option 2: Run from Source
 
-1. **Clone the repository:**
+1. **Clone the repository**  📥
 ```
    git clone git@github.com:Smi0001/agent-binod.git
    cd agent-binod
@@ -117,10 +121,21 @@ npm i
 ```
 <br/>
 
-3. **Set up environment variables**
+3. **Configuration** ⚙️
 Create a `.env` file with your Anthropic API key, and other repo path & token configurations. Refer `.env.example` for the variables to configure.
 
+4. **Execution** ▶️
+
+   Then run from anywhere inside your project:
+
+```
+npm start "Review PR #1 and post comment"
+```
+
+> **Tip**: You can give various variations in your prompt, examples are given below under `Usage` title
+
 ---
+
 
 ## <u>How to find the values for the env variables ?</u> 🔑
 <br/>
