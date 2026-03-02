@@ -3,7 +3,12 @@
     "node": ">=22"
   },
   "scripts": {
-    "start": "npx tsx --env-file=.env index.ts"
+    "start": "npx tsx --env-file=.env index.ts",
+    "build": "tsc",
+    "prepare": "tsc"
+  },
+  "bin": {
+    "agent-binod": "dist/index.js"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.78.0",
@@ -14,9 +19,9 @@
     "tsx": "^4.21.0"
   },
   "name": "agent-binod",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A simple agent that reviews your git code, comments on your PR (pull requests), automated using the Anthropic API.",
-  "main": "index.ts",
+  "main": "dist/index.js",
   "author": "Smi0001",
   "license": "MIT"
 }

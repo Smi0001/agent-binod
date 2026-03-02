@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(node --version)",
-      "Bash(npm pack --dry-run)"
+      "Bash(npm pack --dry-run)",
+      "Bash(npm run build)"
     ]
   }
 }

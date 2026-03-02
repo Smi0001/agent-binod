@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import Anthropic from "@anthropic-ai/sdk";
 import { toolDefinitions, executeTool, Platform } from "./tools";
 

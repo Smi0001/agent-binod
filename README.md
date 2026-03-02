@@ -7,6 +7,7 @@
 ## Table of Contents 📋
 - [Platform](#platform)
 - [Tools](#current-tools)
+- [Getting Started](#getting-started)
 - [Install Dependencies](#install-dependencies)
 - [Usage](#usage)
 - [Environment Variables](#how-to-find-the-values-for-the-env-variables-)
@@ -49,76 +50,31 @@ The prompt controls **what Claude thinks and says** — the tools control **what
 ---
 <br/>
 
-##  Install Dependencies 📦
-1. `node` - v22^
-2. `anthropic-ai/sdk` - v0.7^
-3. `typescript` - v5^
+## Getting Started
+This project is a standalone application and is **not** intended to be installed as a dependency. To run it locally, follow these steps:
+
+1. **Clone the repository:**
+```
+   git clone git@github.com:Smi0001/agent-binod.git
+   cd agent-binod
+```
+
+<br/>
+
+2. **Install Dependencies** 📦
+   - `node` - v22^
+   - `anthropic-ai/sdk` - v0.7^
+   - `typescript` - v5^
 
 
 ```
 npm i
 
 ```
-
----
 <br/>
 
-## Usage 🚀
-Agent Binod will act as a senior programmer who can review codes and post comments (for now). Add new tools and watch him put the CLI on fire 🔥.
-- If only one platform is configured, i.e. `GITEA_TOKEN` or `GITHUB_TOKEN`, etc. single token is set in `.env`, Agent Binod is smart enought to pick that as the default platform.
-- If you have configured multiple platforms, then you need to inform him. Override anytime with `-- --platform=gitea` or `-- --platform=github`. 
-
-<br/>
-
-#### List open PRs 📂
-
-```
-npm start "List all open PRs"
-
-```
-<br/>
-
-#### Review a specific PR 🔍
-
-```
-npm start "Review PR #1001 and post the review as comments"
-```
-> **Gitea** - *default platform, if multiple platforms are configured*
-
-[Agent Binod - platform Gitea - PR review and post comments](https://youtu.be/Y9rwzNHxT74)
-
-[![Watch the demo](https://img.youtube.com/vi/Y9rwzNHxT74/maxresdefault.jpg)](https://www.youtube.com/watch?v=Y9rwzNHxT74)
-
-
-<br/>
-
-> **Github** - *mention platform as github*
-`npm start -- --platform=github "Review PR #1001 and post the review as comments"`
-
-[Agent Binod - platform Github - PR review and post for new commits only (small tweak in the prompt)](https://youtu.be/UgTNF-nUuzA)
-
-[![Watch the demo](https://img.youtube.com/vi/UgTNF-nUuzA/maxresdefault.jpg)](https://www.youtube.com/watch?v=UgTNF-nUuzA)
-
-<br/>
-
-#### Just analyze, don't post 🧪
-```
-npm start "Review PR #1001 and tell me the concerns without posting"
-```
-> **Github** - *mention platform as github*
-`npm start -- --platform=github "Review PR #1001 and do not post"`
-
-[Agent Binod - platform Github - PR review without posting, and post comments on new prompt](https://youtu.be/Aec2Ji97Ozk)
-
-[![Watch the demo](https://img.youtube.com/vi/Aec2Ji97Ozk/maxresdefault.jpg)](https://www.youtube.com/watch?v=Aec2Ji97Ozk)
-
-<br/>
-
-#### Review all open PRs 🔄
-```
-npm start "List open PRs and review each one, post comments"
-```
-<br/>
+3. **Set up environment variables**
+Create a `.env` file with your Anthropic API key, and other repo path & token configurations. Refer env.example for basic variables to configure, and how to set those is given below.
 
 ---
 
@@ -184,7 +140,67 @@ https://github.com/Smi0001/agent-binod  →  `GITHUB_REPO=Smi0001/agent-binod`
 *BASE_BRANCH* — optional. For a typical GitHub repo it would be something like:
 BASE_BRANCH=origin/main
 
-If you leave it blank, the agent still works but local git diffs will fall back to the Gitea default branch, which likely won't exist for a GitHub repo — so local git will fail and it'll fall back to the GitHub API for diffs automatically.
+If you leave it blank, the agent still works but local git diffs will fall back to the Gitea default branch, which likely won't exist for a GitHub repo — so local git will fail and it'll fall back to the GitHub API for diffs automatically.   
+
+---
+<br/>
+
+## Usage 🚀
+Agent Binod will act as a senior programmer who can review codes and post comments (for now). Add new tools and watch him put the CLI on fire 🔥.
+- If only one platform is configured, i.e. `GITEA_TOKEN` or `GITHUB_TOKEN`, etc. single token is set in `.env`, Agent Binod is smart enought to pick that as the default platform.
+- If you have configured multiple platforms, then you need to inform him. Override anytime with `-- --platform=gitea` or `-- --platform=github`. 
+
+<br/>
+
+#### List open PRs 📂
+
+```
+npm start "List all open PRs"
+
+```
+<br/>
+
+#### Review a specific PR 🔍
+
+```
+npm start "Review PR #1001 and post the review as comments"
+```
+> **Gitea** - *default platform, if multiple platforms are configured*
+
+[Agent Binod - platform Gitea - PR review and post comments](https://youtu.be/Y9rwzNHxT74)
+
+[![Watch the demo](https://img.youtube.com/vi/Y9rwzNHxT74/maxresdefault.jpg)](https://www.youtube.com/watch?v=Y9rwzNHxT74)
+
+
+<br/>
+
+> **Github** - *mention platform as github*
+`npm start -- --platform=github "Review PR #1001 and post the review as comments"`
+
+[Agent Binod - platform Github - PR review and post for new commits only (small tweak in the prompt)](https://youtu.be/UgTNF-nUuzA)
+
+[![Watch the demo](https://img.youtube.com/vi/UgTNF-nUuzA/maxresdefault.jpg)](https://www.youtube.com/watch?v=UgTNF-nUuzA)
+
+<br/>
+
+#### Just analyze, don't post 🧪
+```
+npm start "Review PR #1001 and tell me the concerns without posting"
+```
+> **Github** - *mention platform as github*
+`npm start -- --platform=github "Review PR #1001 and do not post"`
+
+[Agent Binod - platform Github - PR review without posting, and post comments on new prompt](https://youtu.be/Aec2Ji97Ozk)
+
+[![Watch the demo](https://img.youtube.com/vi/Aec2Ji97Ozk/maxresdefault.jpg)](https://www.youtube.com/watch?v=Aec2Ji97Ozk)
+
+<br/>
+
+#### Review all open PRs 🔄
+```
+npm start "List open PRs and review each one, post comments"
+```
+<br/>
 
 ---
 <br/>
