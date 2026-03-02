@@ -3,7 +3,8 @@
     "allow": [
       "Bash(node --version)",
       "Bash(npm pack --dry-run)",
-      "Bash(npm run build)"
+      "Bash(npm run build)",
+      "Bash(npm install dotenv)"
     ]
   }
 }

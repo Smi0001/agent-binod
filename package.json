@@ -3,7 +3,7 @@
     "node": ">=22"
   },
   "scripts": {
-    "start": "npx tsx --env-file=.env index.ts",
+    "start": "npx tsx index.ts",
     "build": "tsc",
     "prepare": "tsc"
   },
@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.78.0",
+    "dotenv": "^17.3.1",
     "typescript": "^5.9.3"
   },
   "devDependencies": {
