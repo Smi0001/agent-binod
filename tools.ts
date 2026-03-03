@@ -4,6 +4,10 @@ import * as Git    from "./git";
 
 export type Platform = "gitea" | "github";
 
+// Session-scoped cache: pr_number → full filtered diff
+// Avoids re-running git fetch + git diff on every chunk call for the same PR
+const diffCache = new Map<number, string>();
+
 export const toolDefinitions = [
   {
     name: "list_open_prs",
@@ -12,11 +16,16 @@ export const toolDefinitions = [
   },
   {
     name: "get_pr_diff",
-    description: "Fetches the full code diff for a specific PR. Use this to review what code was changed. Requires a PR number. Returns the raw git diff.",
+    description: `Fetches the code diff for a specific PR, one chunk at a time.
+- Always start with chunk=0 (default).
+- The response header shows [Chunk X of Y]. If Y > 1, call this tool again with chunk=1, chunk=2, ... until you have all chunks.
+- Accumulate all chunks before writing your review — do NOT post a partial review.
+- Large PRs are automatically split at file boundaries so no file is ever cut in half.`,
     input_schema: {
       type: "object",
       properties: {
         pr_number: { type: "number", description: "The PR number to fetch the diff for" },
+        chunk:     { type: "number", description: "Chunk index (0-based). Start at 0, increment until you have all chunks." },
       },
       required: ["pr_number"],
     },
@@ -69,13 +78,41 @@ export async function executeTool(name: string, input: any, platform: Platform =
     }
 
     case "get_pr_diff": {
-      try {
-        // Try local git first (no token needed, faster)
-        return Git.getPRDiffLocally(input.pr_number);
-      } catch {
-        // Fall back to API
-        return api.getPRDiff(input.pr_number);
+      const chunkIndex = input.chunk ?? 0;
+      const limit      = parseInt(process.env.DIFF_MAX_CHARS ?? "20000", 10);
+
+      // Use cached diff if available, otherwise fetch and cache
+      let fullDiff = diffCache.get(input.pr_number);
+      if (!fullDiff) {
+        console.log(`[diff] fetching PR #${input.pr_number} diff (limit: ${limit} chars)`);
+        try {
+          fullDiff = Git.getPRDiffLocally(input.pr_number);
+          console.log(`[diff] source: local git`);
+        } catch (err: any) {
+          console.log(`[diff] local git failed (${err?.message ?? err}), falling back to ${platform} API`);
+          fullDiff = await api.getPRDiff(input.pr_number);
+          console.log(`[diff] source: ${platform} API`);
+        }
+        console.log(`[diff] total size: ${fullDiff.length} chars`);
+        diffCache.set(input.pr_number, fullDiff);
+      } else {
+        console.log(`[diff] PR #${input.pr_number} served from cache (${fullDiff.length} chars)`);
       }
+
+      // Small PR — fits within limit, return directly (single call, no chunking)
+      if (fullDiff.length <= limit) {
+        console.log(`[diff] single pass (fits within limit)`);
+        return fullDiff;
+      }
+
+      // Large PR — split into chunks, Claude fetches each one
+      const chunks      = Git.splitDiffIntoChunks(fullDiff, limit);
+      const totalChunks = chunks.length;
+      const chunk       = chunks[chunkIndex] ?? "";
+      const next        = chunkIndex + 1 < totalChunks ? ` — call get_pr_diff with chunk=${chunkIndex + 1} to continue` : " — this is the last chunk";
+
+      console.log(`[diff] chunk ${chunkIndex + 1}/${totalChunks} (${chunk.length} chars)`);
+      return `[Chunk ${chunkIndex + 1} of ${totalChunks}${next}]\n\n` + chunk;
     }
 
     case "get_pr_commits": {
@@ -96,6 +133,10 @@ export async function executeTool(name: string, input: any, platform: Platform =
 
     case "get_pr_comments": {
       const comments = await api.getPRComments(input.pr_number);
+      if (!Array.isArray(comments)) {
+        const reason = comments.message ?? JSON.stringify(comments);
+        throw new Error(`Failed to fetch comments for PR #${input.pr_number}: ${reason}`);
+      }
       return JSON.stringify(comments.map((c: any) => ({
         author: c.user.login,
         body:   c.body.slice(0, 300),
