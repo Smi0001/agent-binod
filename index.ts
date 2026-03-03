@@ -95,13 +95,24 @@ async function runAgent(userMessage: string) {
         .map(async (block: any) => {
           if (block.type !== "tool_use") return null;
           console.log(`  → calling ${block.name}(${JSON.stringify(block.input)})`);
-          const result = await executeTool(block.name, block.input, current_platform);
-          console.log(`  ← ${result.slice(0, 100)}...`);
-          return {
-            type:        "tool_result" as const,
-            tool_use_id: block.id,
-            content:     result,
-          };
+          try {
+            const result = await executeTool(block.name, block.input, current_platform);
+            console.log(`  ← ${result.slice(0, 100)}...`);
+            return {
+              type:        "tool_result" as const,
+              tool_use_id: block.id,
+              content:     result,
+            };
+          } catch (err: any) {
+            const message = err?.message ?? String(err);
+            console.error(`  ← ERROR [${block.name}]: ${message}`);
+            return {
+              type:        "tool_result" as const,
+              tool_use_id: block.id,
+              content:     `Error: ${message}`,
+              is_error:    true,
+            };
+          }
         })
     );
 

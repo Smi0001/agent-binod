@@ -20,7 +20,7 @@
     "tsx": "^4.21.0"
   },
   "name": "agent-binod",
-  "version": "1.0.3",
+  "version": "1.1.1",
   "description": "A simple agent that reviews your git code, comments on your PR (pull requests), automated using the Anthropic API.",
   "main": "dist/index.js",
   "author": "Smi0001",

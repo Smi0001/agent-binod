@@ -11,6 +11,7 @@
 - [Usage](#usage)
 - [Environment Variables](#how-to-fi****nd-the-values-for-the-env-variables-)
 - [Links](#links)
+- [What's New](#whats-new-)
 - [Coming Soon](#coming-soon)
 
 ---
@@ -297,6 +298,93 @@ npm start "List open PRs and review each one, post comments"
 
 ---
 <br/>
+
+## What's New 🆕
+
+---
+
+### v1.1.1 — Error Handling 🛡️
+
+- **Agent no longer crashes on tool errors** — Each tool call is now wrapped in try/catch. If a tool fails, the error is logged and returned to Claude as `is_error: true` so it can recover and continue the review instead of crashing the whole run.
+  ```
+  → calling get_pr_comments({"pr_number":1019})
+  ← ERROR [get_pr_comments]: Failed to fetch comments for PR #1019: The target couldn't be found.
+  ```
+- **Safe comments fetch** — `get_pr_comments` validates the API response before calling `.map()`. Gitea error objects (e.g. PR not found, auth failure) now throw a clear message instead of `TypeError: comments.map is not a function`.
+
+---
+
+### v1.1.0 — Large PR Support 📦
+
+- **Multi-pass chunked review** — Large PR diffs are automatically split at file boundaries. Claude fetches each chunk in sequence and accumulates them before writing a full review. No file is ever cut in half.
+  > **Note:** Chunking splits only between files, not within a single file. A PR that modifies only one large file will always be reviewed as a single chunk, regardless of `DIFF_MAX_CHARS`.
+- **Smart single-call fallback** — If the diff fits within `DIFF_MAX_CHARS`, it's returned in one call with no chunking overhead.
+- **Session diff cache** — Full diff is fetched once and served from memory for all subsequent chunk calls. Eliminates redundant `git fetch` + `git diff` per chunk.
+- **Git command timeout** — All `execSync` calls (`git fetch`, `git diff`, `git log`) now respect `GIT_TIMEOUT_MS` (default: 30s) to prevent hanging on slow networks or large repos.
+- **Diff logs** — Each `get_pr_diff` call prints to the terminal so you can follow what's happening.
+
+  Small PR (single pass):
+  ```
+  [diff] fetching PR #42 diff (limit: 20000 chars)
+  [diff] source: local git
+  [diff] total size: 8500 chars
+  [diff] single pass (fits within limit)
+  ```
+
+  Large PR (chunked, multiple files):
+  ```
+  [diff] fetching PR #42 diff (limit: 20000 chars)
+  [diff] source: local git
+  [diff] total size: 85000 chars
+  [diff] chunk 1/5 (19800 chars)
+  [diff] PR #42 served from cache (85000 chars)
+  [diff] chunk 2/5 (18200 chars)
+  ...
+  ```
+
+  API fallback (local git unavailable — no upstream remote, wrong `BASE_BRANCH`, timeout, etc.):
+  ```
+  [diff] fetching PR #42 diff (limit: 20000 chars)
+  [diff] local git failed (Command failed: git fetch upstream ...), falling back to github API
+  [diff] source: github API
+  [diff] total size: 8500 chars
+  [diff] single pass (fits within limit)
+  ```
+
+  API fallback due to timeout (`GIT_TIMEOUT_MS` exceeded):
+  ```
+  [diff] fetching PR #42 diff (limit: 20000 chars)
+  [diff] local git failed (spawnSync /bin/sh ETIMEDOUT), falling back to github API
+  [diff] source: github API
+  [diff] total size: 8500 chars
+  [diff] single pass (fits within limit)
+  ```
+
+---
+
+### v1.0.3 — Diff Configuration 🔧
+
+- **Configurable diff limit** — `DIFF_MAX_CHARS` controls the chunk size and chunking threshold (default: 20000, safe up to ~100000).
+- **Noisy file filtering** — Configure `DIFF_SKIP_FILES` in `.env` to skip lock files, generated files, and build output from diffs (e.g. `package-lock.json,dist/,*.min.js`).
+
+---
+
+### v1.0.2 — Global CLI ⚡
+
+- **Install globally** — `npm install -g agent-binod` and run from anywhere as `agent-binod "..."`.
+- **Fixed Node v18 compatibility** — Replaced `--env-file` flag (Node v20+ only) with `dotenv`, making the tool work on Node v18+.
+- **`.npmignore`** — Added explicit publish rules to keep `.env`, `.claude/`, and dev files out of the npm package.
+
+---
+
+### v1.0.1 — GitHub Platform Support 🐙
+
+- **GitHub integration** — Full support for GitHub PRs alongside Gitea.
+- **Auto platform detection** — Agent auto-selects the platform based on which token is configured in `.env`. Override with `--platform=github` or `--platform=gitea`.
+- **`PR_FETCH_LIMIT`** — Configurable max open PRs to fetch per listing (default: 50).
+- **Env validation** — Exits early with a clear error if required env variables are missing for the selected platform.
+
+---
 
 ## <u>Coming Soon</u> ⏳
 1. ~~PR Review for Github~~
