@@ -1,7 +1,9 @@
 import { execSync } from "child_process";
 
+const gitTimeout = () => parseInt(process.env.GIT_TIMEOUT_MS ?? "30000", 10);
+
 export function fetchPRLocally(pr_number: number): string {
-  execSync(`git fetch upstream refs/pull/${pr_number}/head:pr-${pr_number} 2>&1`);
+  execSync(`git fetch upstream refs/pull/${pr_number}/head:pr-${pr_number} 2>&1`, { timeout: gitTimeout() });
   return `pr-${pr_number}`;
 }
 
@@ -31,21 +33,31 @@ function filterNoisyFiles(diff: string): string {
 }
 
 export function getPRDiffLocally(pr_number: number, base = process.env.BASE_BRANCH ?? "upstream/gp-3.0"): string {
-  const limit   = parseInt(process.env.DIFF_MAX_CHARS ?? "20000", 10);
-  const branch  = fetchPRLocally(pr_number);
-  const diff    = execSync(`git diff ${base}...${branch}`).toString();
-  const cleaned = filterNoisyFiles(diff);
+  const branch = fetchPRLocally(pr_number);
+  const diff   = execSync(`git diff ${base}...${branch}`, { timeout: gitTimeout() }).toString();
+  return filterNoisyFiles(diff);
+}
 
-  if (cleaned.length > limit) {
-    return cleaned.slice(0, limit) +
-      `\n\n[DIFF TRUNCATED — current limit is ${limit} characters. ` +
-      `This is a partial review only. ` +
-      `To review the full PR, increase DIFF_MAX_CHARS in your .env (e.g. DIFF_MAX_CHARS=50000).]`;
+// Splits a diff into file-boundary chunks, each within chunkSize characters.
+// Returns array of chunks — Claude calls get_pr_diff with chunk=0,1,2... to read all.
+export function splitDiffIntoChunks(diff: string, chunkSize: number): string[] {
+  const sections = diff.split(/(?=^diff --git )/m).filter(s => s.trim());
+  const chunks: string[] = [];
+  let current = "";
+
+  for (const section of sections) {
+    if (current.length + section.length > chunkSize && current.length > 0) {
+      chunks.push(current);
+      current = section;
+    } else {
+      current += section;
+    }
   }
-  return cleaned;
+  if (current) chunks.push(current);
+  return chunks.length > 0 ? chunks : [""];
 }
 
 export function getPRCommitsLocally(pr_number: number, base = process.env.BASE_BRANCH ?? "upstream/gp-3.0"): string {
   const branch = fetchPRLocally(pr_number);
-  return execSync(`git log ${base}..${branch} --oneline`).toString();
+  return execSync(`git log ${base}..${branch} --oneline`, { timeout: gitTimeout() }).toString();
 }
