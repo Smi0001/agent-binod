@@ -99,6 +99,13 @@ agent-binod "Review PR #1 and post comment"
 ```
 > **Tip**: You can give various variations in your prompt, examples are given below under `Usage` title
 
+4. **Updating** 🔄
+   When a new version is published, update your global install:
+
+```
+npm install -g agent-binod@latest
+```
+
 ---
 
 ### Option 2: Run from Source
